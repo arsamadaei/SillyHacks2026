@@ -2,7 +2,7 @@ import google.generativeai as genai
 from inference import load_trained_model, predict
 
 # Configure with your API key
-genai.configure(api_key="AIzaSyBfypU6QJLeaw3lfNSr0V8_4FiB5ODVBhw")
+genai.configure(api_key="AIzaSyBVZ3Ou7gF_8DeHMWCjPbFz6N_2yB1rQ0U")
 
 # Load your snake model once
 snake_model, species_list = load_trained_model("snake_model.pth")
