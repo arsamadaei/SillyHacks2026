@@ -19,7 +19,7 @@ print(os.path)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.efficientnet_b0(weights = 'IMAGENET1K_V1') # A good model for recognizing textures which is useful for snakes
 BATCH_SIZE = 8
-NUM_EPOCHS = 20e
+NUM_EPOCHS = 20
 
 print(f"Using device {device}.")
 
