@@ -6,6 +6,7 @@ import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 def load_trained_model(checkpoint_path):
     checkpoint = torch.load(checkpoint_path, map_location=device)
     class_names = checkpoint['classes']

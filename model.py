@@ -18,6 +18,8 @@ import random
 print(os.path)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.efficientnet_b0(weights = 'IMAGENET1K_V1') # A good model for recognizing textures which is useful for snakes
+checkpoint_path = "snake_model.pth"
+
 BATCH_SIZE = 8
 NUM_EPOCHS = 20
 
@@ -43,17 +45,33 @@ num_species = len(train_set.classes)
 in_features = model.classifier[1].in_features
 model.classifier[1] = nn.Linear(in_features, num_species)
 
+if os.path.exists(checkpoint_path):
+    print(f"Found saved model '{checkpoint_path}'. Loading weights...")
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    model.load_state_dict(checkpoint['model_state_dict'])
+
+    # Unfreeze all layers for post-training
+    for param in model.parameters():
+        param.requires_grad = True
+
+    print("Model unfrozen. Fine-tuning all layers...")
+
+else:
+    print("No saved model found. Starting training from scratch.")
+    
 model = model.to(device)
+
+
 
 # Gradient descent by minimizing cross-entropy loss, using adam optimizer
 loss = nn.CrossEntropyLoss()
 print(loss)
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-6)
 
 print(f"Model ready to classify {num_species} snake species.")
 
 
-def run_epoch_samples(model, class_names, num_samples=3):
+def run_epoch_samples(model, class_names, num_samples=10):
     model.eval()
     all_images = glob.glob("Snakes_Dataset/**/*.*", recursive=True)
     samples = random.sample(all_images, min(num_samples, len(all_images)))
@@ -98,7 +116,7 @@ for epoch in range(NUM_EPOCHS):
     
     
     print(f"Epoch {epoch+1}/{NUM_EPOCHS} - Loss: {running_loss/len(train_loader):.4f}")
-    torch.save({'model_state_dict': model.state_dict(), 'classes': train_set.classes}, "snake_model.pth")
+    torch.save({'model_state_dict': model.state_dict(), 'classes': train_set.classes}, "snake_model_tweaking.pth")
 
 
 print("Training Complete!")
