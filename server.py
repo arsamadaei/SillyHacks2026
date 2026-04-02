@@ -57,7 +57,7 @@ Return ONLY a valid JSON object (no markdown, no code fences) with this exact st
   "symptoms": ["symptom 1", "symptom 2", "symptom 3", "symptom 4", "symptom 5"],
   "treatment": ["treatment step 1", "treatment step 2", "treatment step 3", "treatment step 4"],
   "firstAid": "Immediate first aid steps before reaching hospital. Be specific and medically accurate.",
-  "confidence": {int(confidence)}
+
 }}
 
 Be medically accurate and thorough. If the species is unknown or not a venomous snake, indicate that in the dangerLevel and provide appropriate guidance."""
@@ -96,7 +96,7 @@ Be medically accurate and thorough. If the species is unknown or not a venomous 
             "symptoms": ["Consult medical reference for species-specific symptoms"],
             "treatment": ["Seek immediate medical attention", "Contact local poison control center"],
             "firstAid": "Keep victim calm and still. Immobilize the affected limb. Seek emergency medical care immediately.",
-            "confidence": int(confidence)
+            
         }
 
 

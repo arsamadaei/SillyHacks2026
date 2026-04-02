@@ -76,7 +76,7 @@ if __name__ == "__main__":
         print(f"Error: {result['error']}")
     else:
         print(f"Snake identified: {result['species']}")
-        print(f"Confidence: {result['confidence']:.2f}%")
+
         print("\n" + "=" * 50)
         print("MEDICAL ADVICE FROM GEMINI:")
         print("=" * 50)
