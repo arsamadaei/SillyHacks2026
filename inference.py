@@ -44,7 +44,7 @@ def predict(image_path, model, class_names):
     return species, confidence
 
 if __name__ == "__main__":
-    MODEL_PATH = "snake_model.pth"
+    MODEL_PATH = "snake_model_tweaking.pth"
     TEST_IMAGE = "test.png" 
     
     if os.path.exists(MODEL_PATH):

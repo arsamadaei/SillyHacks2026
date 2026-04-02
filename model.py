@@ -18,7 +18,7 @@ import random
 print(os.path)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.efficientnet_b0(weights = 'IMAGENET1K_V1') # A good model for recognizing textures which is useful for snakes
-checkpoint_path = "snake_model.pth"
+checkpoint_path = "snake_model_tweaking.pth"
 
 BATCH_SIZE = 16
 NUM_EPOCHS = 20
