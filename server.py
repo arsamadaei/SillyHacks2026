@@ -31,18 +31,26 @@ snake_model, species_list = load_trained_model(MODEL_PATH)
 print(f"Model loaded. Can identify {len(species_list)} snake species.")
 
 # Configure Gemini API
-# NOTE: In production, use environment variables for API keys
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDwYPXV1vkrJIyiMqdhGlOvkFQNnutj1aY")
-gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCW7bwYppgLjSzmIyyGY59my4STnYGLQ3A")
+gemini_client = None
+if GEMINI_API_KEY:
+    try:
+        gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        print("Gemini client initialized")
+    except Exception as e:
+        print(f"Warning: Could not initialize Gemini client: {e}")
 
 
 def get_snake_info_from_gemini(species, confidence):
     """
     Query Gemini for detailed snake information and treatment advice.
     """
+    if not gemini_client:
+        raise Exception("Gemini client not initialized")
+    
     prompt = f"""You are a medical expert specializing in venomous snake bites.
 
-A snake has been identified as "{species}" with {confidence:.1f}% confidence.
+A snake has been identified as "{species}".
 
 Provide detailed information for medical professionals treating a bite victim.
 
@@ -56,8 +64,7 @@ Return ONLY a valid JSON object (no markdown, no code fences) with this exact st
   "venomType": "Type of venom (e.g., neurotoxic, hemotoxic, cytotoxic) and how it affects the body",
   "symptoms": ["symptom 1", "symptom 2", "symptom 3", "symptom 4", "symptom 5"],
   "treatment": ["treatment step 1", "treatment step 2", "treatment step 3", "treatment step 4"],
-  "firstAid": "Immediate first aid steps before reaching hospital. Be specific and medically accurate.",
-
+  "firstAid": "Immediate first aid steps before reaching hospital. Be specific and medically accurate."
 }}
 
 Be medically accurate and thorough. If the species is unknown or not a venomous snake, indicate that in the dangerLevel and provide appropriate guidance."""
@@ -84,20 +91,10 @@ Be medically accurate and thorough. If the species is unknown or not a venomous 
         # Parse JSON
         result = json.loads(response_text)
         return result
+        
     except Exception as e:
         print(f"Gemini API error: {e}")
-        # Return fallback response if Gemini fails
-        return {
-            "snakeName": species,
-            "scientificName": "",
-            "dangerLevel": "Unknown",
-            "description": f"Snake identified as {species}.",
-            "venomType": "Unknown - consult local toxicology reference",
-            "symptoms": ["Consult medical reference for species-specific symptoms"],
-            "treatment": ["Seek immediate medical attention", "Contact local poison control center"],
-            "firstAid": "Keep victim calm and still. Immobilize the affected limb. Seek emergency medical care immediately.",
-            
-        }
+        raise e
 
 
 @app.route('/analyze', methods=['POST'])

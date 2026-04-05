@@ -87,6 +87,21 @@ def predict_batch_check(model, class_names, num_samples=10):
     print(f"Accuracy:     {accuracy:.2f}% ({correct_count}/{num_samples})")
     print("-" * 60 + "\n")
 
+
+def predict(image_path, model, class_names):
+    img = Image.open(image_path).convert("RGB")
+    img_t = inference_transforms(img).unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        outputs = model(img_t)
+        probabilities = torch.nn.functional.softmax(outputs[0], dim=0)
+        conf, pred_idx = torch.max(probabilities, 0)
+
+    species = class_names[pred_idx.item()]
+    confidence = conf.item() * 100
+    
+    return species, confidence
+
 if __name__ == "__main__":
     MODEL_PATH = "snake_model_tweaking.pth" 
     

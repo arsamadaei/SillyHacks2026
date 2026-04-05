@@ -2,14 +2,18 @@ from inference import load_trained_model, predict
 from google import genai
 import sys
 import os
+from dotenv import load_dotenv
+import os
+
 
 # Configure with your API key
 # NOTE: In production, use environment variables for API keys
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDwYPXV1vkrJIyiMqdhGlOvkFQNnutj1aY")
+load_dotenv() # This looks for the .env file automatically
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or "AIzaSyCW7bwYppgLjSzmIyyGY59my4STnYGLQ3A"
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 # Load your snake model once
-snake_model, species_list = load_trained_model("snake_model.pth")
+snake_model, species_list = load_trained_model('snake_model_tweaking.pth')
 
 
 def analyze_snake_image(image_path):
